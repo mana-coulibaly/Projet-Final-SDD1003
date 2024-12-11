@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apprentissage Automatique - Films</title>
+    <!-- Fonts and icons -->
+    <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
+    <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-icons.css" rel="stylesheet" />
+    <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-svg.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <!-- CSS Files -->
+    <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.1.0" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <!-- Chart.js and Simple Statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/7.7.0/simple-statistics.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="text-center">Algorithmes d'Apprentissage Automatique</h1>
+            <p class="text-center">Analyse des performances d'une régression linéaire sur les données des films.</p>
+        </header>
+
+        <!-- Chart Section -->
+        <section>
+            <h2 class="text-center">Regression linéaire</h2>
+            <canvas id="regressionChart" width="400" height="200"></canvas>
+        </section>
+
+        <!-- Metrics Table Section -->
+        <section class="metrics-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Évaluation des Performances</h2>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="metricsTable">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Métrique</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Valeur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Erreur Absolue Moyenne (MAE)</td>
+                                <td id="maeValue">-</td>
+                            </tr>
+                            <tr>
+                                <td>Erreur Quadratique Moyenne (RMSE)</td>
+                                <td id="rmseValue">-</td>
+                            </tr>
+                            <tr>
+                                <td>Coefficient de Détermination (R²)</td>
+                                <td id="r2Value">-</td>
+                            </tr>
+                            <tr>
+                                <td>Accuracy Score</td>
+                                <td id="accuracyValue">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- KNN Chart Section -->
+        <section>
+            <h2 class="text-center">KNN(K-Nearest Neighbor)</h2>
+            <canvas id="knnChart" width="400" height="200"></canvas>
+        </section>
+
+        <!-- Metrics Table Section -->
+        <section class="metrics-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Évaluation des Performances</h2>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="knnMetricsTable">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Métrique</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Valeur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Erreur Absolue Moyenne (MAE)</td>
+                                <td id="knnMaeValue">-</td>
+                            </tr>
+                            <tr>
+                                <td>Erreur Quadratique Moyenne (RMSE)</td>
+                                <td id="knnRmseValue">-</td>
+                            </tr>
+                            <tr>
+                                <td>Coefficient de Détermination (R²)</td>
+                                <td id="knnR2Value">-</td>
+                            </tr>
+                            <tr>
+                                <td>Accuracy Score</td>
+                                <td id="knnAccuracyValue">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- DBSCAN Chart Section -->
+        <section>
+            <h2 class="text-center">DBSCAN</h2>
+            <canvas id="dbscanChart" width="400" height="200"></canvas>
+        </section>
+
+        <!-- Metrics Table Section
+        <section class="metrics-section">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Évaluation des Performances</h2>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="knnMetricsTable">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Métrique</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Valeur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Erreur Absolue Moyenne (MAE)</td>
+                                <td id="knnMaeValue">-</td>
+                            </tr>
+                            <tr>
+                                <td>Erreur Quadratique Moyenne (RMSE)</td>
+                                <td id="knnRmseValue">-</td>
+                            </tr>
+                            <tr>
+                                <td>Coefficient de Détermination (R²)</td>
+                                <td id="knnR2Value">-</td>
+                            </tr>
+                            <tr>
+                                <td>Accuracy Score</td>
+                                <td id="knnAccuracyValue">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        -->
+
+    </div>
+
+    <!-- Script for loading regression logic -->
+    <script src="../../../../Server/algorithmes.js"></script>
+</body>
+</html>

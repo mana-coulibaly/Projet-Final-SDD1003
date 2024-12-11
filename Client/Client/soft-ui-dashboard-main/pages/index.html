@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <title>
+    Films
+  </title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
+  <!-- Nucleo Icons -->
+  <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.1.0" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  
+
+</head>
+
+<body class="g-sidenav-show  bg-gray-100">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-2">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Table</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Liste</li>
+          </ol>
+          <h6 class="font-weight-bolder mb-0">Films</h6>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            <!-- Bouton pour rediriger vers la page des graphiques -->
+            <button onclick="window.location.href='graphiques.html'" class="btn btn-primary">Voir les graphiques</button>
+          </div>
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            <!-- Bouton pour rediriger vers la page des graphiques -->
+            <button onclick="window.location.href='algorithmes.html'" class="btn btn-primary">Voir les algorithmes d'apprentissage automatique</button>
+          </div>
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            <!-- Rechercher par titre -->
+            <div class="input-group mb-3">
+              <span class="input-group-text text-body">
+                  <i class="fas fa-search" aria-hidden="true"></i>
+              </span>
+              <input 
+                  id="search-title" 
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Rechercher film par titre ..." 
+                  onfocus="focused(this)" 
+                  onfocusout="defocused(this)">
+            </div>
+
+
+            <!-- Intervalle Min/Max pour Popularité -->
+            <div class="filter-group mb-3">
+              <input 
+                id="min-popularity" 
+                type="number" 
+                class="form-control filter-field" 
+                placeholder="Min Popularité" 
+                onfocus="focused(this)" 
+                onfocusout="defocused(this)">
+              <input 
+                id="max-popularity" 
+                type="number" 
+                class="form-control filter-field" 
+                placeholder="Max Popularité" 
+                onfocus="focused(this)" 
+                onfocusout="defocused(this)">
+            </div>
+
+            <!-- Bouton de recherche -->
+            <div class="filter-group">
+              <button id="search-button" class="btn btn-primary">Rechercher</button>
+            </div>
+            <div class="filter-group">
+              <button id="reset-button" class="btn btn-secondary">Réinitialiser</button>
+            </div>
+          </div>
+          <ul class="navbar-nav  justify-content-end">
+          
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    
+    <!-- End Navbar -->
+    <div class="container-fluid py-4" id="All-table">
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0">
+              <h6>Liste des Films</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+
+                <table class="table align-items-center mb-0" id="data-table">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Titre</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Overview</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Release Date</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Popularity</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vote Average</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vote Count</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mettre à jour</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Supprimer</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Les lignes seront ajoutées dynamiquement ici -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Ajouter un bouton sous le tableau -->
+          <button id="load-more" class="btn btn-primary">Voir plus</button>
+
+        </div>
+      </div>
+
+      <footer class="footer pt-3  ">
+        
+      </footer>
+    </div>
+    
+  </main>
+
+<!-- Ajoutez un spinner dans le DOM -->
+<div id="loadingSpinner" style="display: none;">
+    <i class="fas fa-spinner fa-spin"></i> Chargement...
+</div>
+
+<!-- Modal modifier un film -->
+<div id="updateMovieModal" class="modal" style="display: none;">
+  <div class="modal-content">
+      <div class="modal-header">
+          <h3 id="modal-title" class="font-weight-bolder text-info text-gradient">Modifier un film</h3>
+          <span class="close-btn">&times;</span>
+      </div>
+      <div class="modal-body">
+          <form role="form">
+            <!-- Champ caché pour l'ID -->
+            <input type="hidden" id="movie-id" value="">
+            <label>Titre</label>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="movie-title" placeholder="Titre" aria-label="Titre">
+            </div>
+            <label>Overview</label>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="movie-overview" placeholder="Overview" aria-label="Overview">
+            </div>
+            <label>Release date</label>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="movie-release" placeholder="Release date" aria-label="Overview">
+            </div>
+            <label>Popularity</label>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="movie-popularity" placeholder="Popularity" aria-label="Overview">
+            </div>
+            <label>Vote Average</label>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="movie-vote-avg" placeholder="Vote Average" aria-label="Overview">
+            </div>
+            <label>Vote Count</label>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="movie-vote-count" placeholder="Vote Count" aria-label="Overview">
+            </div>
+            <div class="text-center">
+                <button type="button" id="updateMovieButton" class="btn btn-primary w-100 mt-4 mb-0" style="display: none;">Mettre à jour</button>
+            </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+
+
+  <!--   Core JS Files   -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="../assets/js/soft-ui-dashboard.min.js?v=1.1.0"></script>
+  <!-- <script src="../assets/js/javascript.js"></script> -->
+  <script src="../../../../Server/app.js"></script>
+</body>
+
+</html>
