@@ -34,7 +34,12 @@ if (!mongoURI) {
     process.exit(1);
 }
 
-mongoose.connect(mongoURI, { dbName: mongoDatabase })
+mongoose.connect(mongoURI, {
+    dbName: mongoDatabase,
+    // Les utilisateurs MongoDB Atlas sont généralement authentifiés dans admin,
+    // même lorsque les données de l'application sont stockées dans Films.
+    authSource: 'admin'
+})
 .then(() => {
     console.log('Connecté à MongoDB Atlas avec succès');
     console.log('Base de données:', mongoose.connection.name);
