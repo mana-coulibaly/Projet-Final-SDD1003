@@ -1,0 +1,6 @@
+Pour pouvoir exécuter correctement le code, voici les étapes:
+- Télécharger le projet et l'ouvrir avec votre éditeur de code visual studio code par exemple
+- Ouvrir un terminal
+- Changer de répertoire pour lancer le serveur en premier lieu (taper : cd Server)
+- Lancer le serveur en tapant : node server.js
+- Vous pourrez ensuite ouvrir la page index.html et naviguer dans le site
