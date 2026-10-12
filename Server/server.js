@@ -1,22 +1,37 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config();
 
 // Importer les routes
 const filmRoutes = require('./routes/films');
 
 // Initialisation de l'application
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
+const allowedOrigins = (process.env.FRONTEND_URL || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 
 // Middleware
 app.use(cors({
+    origin: allowedOrigins.length ? allowedOrigins : true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 }));
 app.use(express.json());
 
+app.get('/health', (_req, res) => {
+    res.status(200).json({ status: 'ok', service: 'Projet Final SDD1003 API' });
+});
+
 // Connexion à MongoDB
-const mongoURI = 'mongodb+srv://manastar:SDD1003@cluster1.slqex.mongodb.net/Films?retryWrites=true&w=majority';
+const mongoURI = process.env.MONGODB_URI;
+
+if (!mongoURI) {
+    console.error('MONGODB_URI est obligatoire pour démarrer le serveur.');
+    process.exit(1);
+}
 
 mongoose.connect(mongoURI)
 .then(() => {
@@ -29,39 +44,7 @@ mongoose.connect(mongoURI)
 // Routes
 app.use('/api/films', filmRoutes);
 
-// Route pour la recherche des films
-app.get('/api/films/search', (req, res) => {
-    const { title, minPopularity, maxPopularity } = req.query;
-
-    console.log('server.js...');
-    console.log('Titre:', title);
-    console.log('Popularité Min:', minPopularity);
-    console.log('Popularité Max:', maxPopularity);
-
-    // Si aucun critère n'est fourni, renvoyer une erreur
-    if (!title && !minPopularity && !maxPopularity) {
-        return res.status(400).json({ error: 'Veuillez entrer au moins un critère de recherche.' });
-    }
-
-    let filteredMovies = movies;
-
-    if (title) {
-        filteredMovies = filteredMovies.filter(movie => movie.title.toLowerCase().includes(title.toLowerCase()));
-    }
-
-    if (minPopularity) {
-        filteredMovies = filteredMovies.filter(movie => movie.popularity >= minPopularity);
-    }
-
-    if (maxPopularity) {
-        filteredMovies = filteredMovies.filter(movie => movie.popularity <= maxPopularity);
-    }
-
-    // Retourner les films filtrés
-    res.json(filteredMovies);
-});
-
 // Démarrage du serveur
-app.listen(PORT, () => {
-    console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
 });
