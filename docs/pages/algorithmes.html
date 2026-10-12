@@ -1,161 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apprentissage Automatique - Films</title>
-    <!-- Fonts and icons -->
-    <link href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800" rel="stylesheet" />
-    <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="https://demos.creative-tim.com/soft-ui-dashboard/assets/css/nucleo-svg.css" rel="stylesheet" />
-    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-    <!-- CSS Files -->
-    <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.1.0" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <!-- Chart.js and Simple Statistics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-statistics/7.7.0/simple-statistics.min.js"></script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apprentissage automatique | Films</title>
+  <link rel="stylesheet" href="../assets/css/soft-ui-dashboard.css?v=1.1.0"><link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <style>
+    :root{--ink:#172b4d;--muted:#67748e;--card:#fff}body{background:linear-gradient(135deg,#f7f9fc,#e9f3ff);color:var(--ink)}.page{max-width:1240px;margin:auto;padding:32px 20px 56px}.hero{background:linear-gradient(135deg,#172b4d,#8965e0);color:#fff;border-radius:24px;padding:36px;margin-bottom:24px;box-shadow:0 18px 45px #172b4d25}.hero h1{color:#fff;margin:8px 0;font-size:clamp(2rem,4vw,3.2rem)}.hero p{color:#f0ebff;max-width:780px;margin:0}.eyebrow{color:#b7f1ff;text-transform:uppercase;letter-spacing:.18em;font-weight:700;font-size:.75rem}.back{color:#fff;text-decoration:none;font-weight:700}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.card-panel{background:var(--card);border:1px solid #e6edf5;border-radius:20px;padding:24px;box-shadow:0 12px 30px #172b4d12}.card-panel h2{margin:0 0 6px;color:var(--ink)}.card-panel p{color:var(--muted);margin-top:0}.chart-wrap{position:relative;min-height:350px}.status{padding:12px 16px;border-radius:12px;background:#fff;color:var(--muted);margin-bottom:20px}.status.error{color:#b42318;background:#fff1f0}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.metric{background:#f6f8ff;border-radius:12px;padding:14px}.metric strong{display:block;font-size:1.25rem;color:#5e72e4}.metric span{color:var(--muted);font-size:.8rem}.explain{background:#f8fbff;border-left:4px solid #11cdef;padding:14px 16px;color:var(--muted);border-radius:0 10px 10px 0;margin-top:18px}.wide{grid-column:1/-1}@media(max-width:800px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.metrics{grid-template-columns:1fr}.hero{padding:26px}}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1 class="text-center">Algorithmes d'Apprentissage Automatique</h1>
-            <p class="text-center">Analyse des performances d'une régression linéaire sur les données des films.</p>
-        </header>
-
-        <!-- Chart Section -->
-        <section>
-            <h2 class="text-center">Regression linéaire</h2>
-            <canvas id="regressionChart" width="400" height="200"></canvas>
-        </section>
-
-        <!-- Metrics Table Section -->
-        <section class="metrics-section">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Évaluation des Performances</h2>
-                </div>
-                <div class="card-body table-responsive p-0">
-                    <table class="table align-items-center mb-0" id="metricsTable">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Métrique</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Valeur</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Erreur Absolue Moyenne (MAE)</td>
-                                <td id="maeValue">-</td>
-                            </tr>
-                            <tr>
-                                <td>Erreur Quadratique Moyenne (RMSE)</td>
-                                <td id="rmseValue">-</td>
-                            </tr>
-                            <tr>
-                                <td>Coefficient de Détermination (R²)</td>
-                                <td id="r2Value">-</td>
-                            </tr>
-                            <tr>
-                                <td>Accuracy Score</td>
-                                <td id="accuracyValue">-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- KNN Chart Section -->
-        <section>
-            <h2 class="text-center">KNN(K-Nearest Neighbor)</h2>
-            <canvas id="knnChart" width="400" height="200"></canvas>
-        </section>
-
-        <!-- Metrics Table Section -->
-        <section class="metrics-section">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Évaluation des Performances</h2>
-                </div>
-                <div class="card-body table-responsive p-0">
-                    <table class="table align-items-center mb-0" id="knnMetricsTable">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Métrique</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Valeur</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Erreur Absolue Moyenne (MAE)</td>
-                                <td id="knnMaeValue">-</td>
-                            </tr>
-                            <tr>
-                                <td>Erreur Quadratique Moyenne (RMSE)</td>
-                                <td id="knnRmseValue">-</td>
-                            </tr>
-                            <tr>
-                                <td>Coefficient de Détermination (R²)</td>
-                                <td id="knnR2Value">-</td>
-                            </tr>
-                            <tr>
-                                <td>Accuracy Score</td>
-                                <td id="knnAccuracyValue">-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- DBSCAN Chart Section -->
-        <section>
-            <h2 class="text-center">DBSCAN</h2>
-            <canvas id="dbscanChart" width="400" height="200"></canvas>
-        </section>
-
-        <!-- Metrics Table Section
-        <section class="metrics-section">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Évaluation des Performances</h2>
-                </div>
-                <div class="card-body table-responsive p-0">
-                    <table class="table align-items-center mb-0" id="knnMetricsTable">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Métrique</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Valeur</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Erreur Absolue Moyenne (MAE)</td>
-                                <td id="knnMaeValue">-</td>
-                            </tr>
-                            <tr>
-                                <td>Erreur Quadratique Moyenne (RMSE)</td>
-                                <td id="knnRmseValue">-</td>
-                            </tr>
-                            <tr>
-                                <td>Coefficient de Détermination (R²)</td>
-                                <td id="knnR2Value">-</td>
-                            </tr>
-                            <tr>
-                                <td>Accuracy Score</td>
-                                <td id="knnAccuracyValue">-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-        -->
-
-    </div>
-
-    <!-- Script for loading regression logic -->
+  <main class="page">
+    <section class="hero"><a class="back" href="index.html">← Retour à la liste</a><div class="eyebrow">Décision basée sur les données</div><h1>Apprentissage automatique</h1><p>Trois méthodes explorent les relations entre les notes, les votes et la popularité. Les données sont séparées en apprentissage et en test.</p></section>
+    <div id="status" class="status">Préparation des modèles…</div>
+    <section class="grid">
+      <article class="card-panel"><h2>Régression linéaire</h2><p>Une ligne de tendance estime la popularité à partir de la note moyenne.</p><div class="chart-wrap"><canvas id="regressionChart"></canvas></div><div class="metrics"><div class="metric"><strong id="linearMae">—</strong><span>Erreur moyenne (MAE)</span></div><div class="metric"><strong id="linearRmse">—</strong><span>Erreur quadratique (RMSE)</span></div><div class="metric"><strong id="linearR2">—</strong><span>Qualité d’ajustement (R²)</span></div></div></article>
+      <article class="card-panel"><h2>K plus proches voisins (KNN)</h2><p>KNN estime un film en regardant les cinq films qui lui ressemblent le plus.</p><div class="chart-wrap"><canvas id="knnChart"></canvas></div><div class="metrics"><div class="metric"><strong id="knnMae">—</strong><span>Erreur moyenne</span></div><div class="metric"><strong id="knnRmse">—</strong><span>Erreur quadratique</span></div><div class="metric"><strong id="knnR2">—</strong><span>Qualité d’ajustement</span></div></div></article>
+      <article class="card-panel wide"><h2>Regroupement DBSCAN</h2><p>DBSCAN rassemble les films proches selon leur note et leur popularité. Les couleurs représentent les groupes ; les points gris sont isolés.</p><div class="chart-wrap"><canvas id="clusterChart"></canvas></div><div id="clusterSummary" class="explain">Analyse des groupes en cours…</div></article>
+    </section>
+  </main>
+  <script src="../assets/js/api-config.js"></script>
+  <script>
+    const apiUrl=(window.SDD1003_API_URL||'').replace(/\/$/,'');const status=document.querySelector('#status');const n=v=>Number.isFinite(Number(v))?Number(v):0;const mean=a=>a.reduce((s,v)=>s+v,0)/a.length;const mae=(a,b)=>mean(a.map((v,i)=>Math.abs(v-b[i])));const rmse=(a,b)=>Math.sqrt(mean(a.map((v,i)=>(v-b[i])**2)));function r2(a,b){const m=mean(b),total=b.reduce((s,v)=>s+(v-m)**2,0);return total?1-a.reduce((s,v,i)=>s+(v-b[i])**2,0)/total:0}function regression(points){const xm=mean(points.map(p=>p.x)),ym=mean(points.map(p=>p.y)),den=points.reduce((s,p)=>s+(p.x-xm)**2,0)||1,slope=points.reduce((s,p)=>s+(p.x-xm)*(p.y-ym),0)/den;return {predict:x=>slope*x+ym-slope*xm}}function setMetric(id,v){document.getElementById(id).textContent=Number.isFinite(v)?v.toFixed(3):'—'}
+    function dbscan(points,eps=.16,minPts=4){const labels=Array(points.length).fill(undefined),distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),neighbors=i=>points.map((p,j)=>distance(points[i],p)<=eps?j:-1).filter(j=>j>=0);let cluster=0;for(let i=0;i<points.length;i++){if(labels[i]!==undefined)continue;const ns=neighbors(i);if(ns.length<minPts){labels[i]=-1;continue}labels[i]=cluster;const queue=[...ns];for(let q=0;q<queue.length;q++){const j=queue[q];if(labels[j]===-1)labels[j]=cluster;if(labels[j]!==undefined)continue;labels[j]=cluster;const more=neighbors(j);if(more.length>=minPts)queue.push(...more)}cluster++}return{labels,count:cluster}}
+    async function load(){try{const response=await fetch(`${apiUrl}/api/films?limit=100`);if(!response.ok)throw new Error(`API ${response.status}`);const payload=await response.json();const films=(payload.films||[]).filter(f=>f.title&&Number.isFinite(n(f.vote_average))&&Number.isFinite(n(f.popularity)));if(films.length<10)throw new Error('Données insuffisantes');status.textContent=`${films.length} films utilisés pour entraîner et tester les modèles.`;const points=films.map(f=>({x:n(f.vote_average),y:n(f.popularity),title:f.title})),split=Math.floor(points.length*.8),train=points.slice(0,split),test=points.slice(split),model=regression(train),actual=test.map(p=>p.y),predicted=test.map(p=>model.predict(p.x));setMetric('linearMae',mae(predicted,actual));setMetric('linearRmse',rmse(predicted,actual));setMetric('linearR2',r2(predicted,actual));new Chart(document.getElementById('regressionChart'),{type:'scatter',data:{datasets:[{label:'Films réels',data:points,backgroundColor:'#11cdef',pointRadius:4},{label:'Tendance linéaire',data:[{x:0,y:model.predict(0)},{x:10,y:model.predict(10)}],showLine:true,borderColor:'#5e72e4',backgroundColor:'#5e72e4',pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Note moyenne / 10'},min:0,max:10},y:{beginAtZero:true,title:{display:true,text:'Popularité'}}}}});
+      const k=5,knnPred=test.map(t=>mean(train.map(p=>({d:Math.abs(p.x-t.x),y:p.y})).sort((a,b)=>a.d-b.d).slice(0,k).map(p=>p.y)));setMetric('knnMae',mae(knnPred,actual));setMetric('knnRmse',rmse(knnPred,actual));setMetric('knnR2',r2(knnPred,actual));new Chart(document.getElementById('knnChart'),{type:'line',data:{labels:test.map(p=>p.title.slice(0,18)),datasets:[{label:'Popularité réelle',data:actual,borderColor:'#11cdef',tension:.25},{label:'Popularité estimée',data:knnPred,borderColor:'#fb6340',tension:.25}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,title:{display:true,text:'Popularité'}},x:{ticks:{maxRotation:60,minRotation:45}}}}});
+      const minX=Math.min(...points.map(p=>p.x)),maxX=Math.max(...points.map(p=>p.x)),minY=Math.min(...points.map(p=>p.y)),maxY=Math.max(...points.map(p=>p.y)),normalized=points.map(p=>({x:(p.x-minX)/(maxX-minX||1),y:(p.y-minY)/(maxY-minY||1),title:p.title})),result=dbscan(normalized),colors=['#5e72e4','#11cdef','#2dce89','#fb6340','#8965e0','#f3a4b5'];const datasets=[];for(let c=-1;c<result.count;c++)datasets.push({label:c===-1?'Profils isolés':`Groupe ${c+1}`,data:normalized.filter((_,i)=>result.labels[i]===c),backgroundColor:c===-1?'#8898aa':colors[c%colors.length],pointRadius:5});new Chart(document.getElementById('clusterChart'),{type:'scatter',data:{datasets},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Note normalisée'},min:0,max:1},y:{title:{display:true,text:'Popularité normalisée'},min:0,max:1}}}});document.getElementById('clusterSummary').textContent=`DBSCAN a identifié ${result.count} groupe(s) et ${result.labels.filter(v=>v===-1).length} profil(s) isolé(s) parmi les ${films.length} films analysés.`;
+    }catch(error){console.error(error);status.textContent='Impossible de charger les données ou de calculer les modèles.';status.classList.add('error');document.getElementById('clusterSummary').textContent='Une erreur est survenue pendant l’analyse.'}}load();
+  </script>
 </body>
 </html>

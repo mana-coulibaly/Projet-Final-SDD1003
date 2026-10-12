@@ -1,28 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graphiques des films</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment"></script>
-    <script>
-        // Test simple si Chart.js est chargé
-        console.log('Chart.js chargé:');
-        console.log(Chart); // Si Chart.js est chargé correctement, vous devriez voir un objet 'Chart' dans la console
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analyse graphique | Films</title>
+  <link rel="stylesheet" href="../assets/css/soft-ui-dashboard.css?v=1.1.0">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <style>
+    :root { --ink:#172b4d; --muted:#67748e; --card:#fff; }
+    body { background:linear-gradient(135deg,#f7f9fc,#e9f3ff); color:var(--ink); }
+    .page { max-width:1240px; margin:auto; padding:32px 20px 56px; }
+    .hero { background:linear-gradient(135deg,#172b4d,#5e72e4); color:#fff; border-radius:24px; padding:36px; margin-bottom:24px; box-shadow:0 18px 45px #172b4d25; }
+    .hero h1 { color:#fff; margin:8px 0; font-size:clamp(2rem,4vw,3.2rem); }
+    .hero p { color:#e9edff; max-width:720px; margin:0; }
+    .eyebrow { color:#9be7ff; text-transform:uppercase; letter-spacing:.18em; font-weight:700; font-size:.75rem; }
+    .back { color:#fff; text-decoration:none; font-weight:700; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+    .card-panel { background:var(--card); border:1px solid #e6edf5; border-radius:20px; padding:24px; box-shadow:0 12px 30px #172b4d12; }
+    .card-panel h2 { margin:0 0 6px; color:var(--ink); }.card-panel p { color:var(--muted); margin-top:0; }
+    .chart-wrap { position:relative; min-height:330px; }.status { padding:12px 16px; border-radius:12px; background:#fff; color:var(--muted); margin-bottom:20px; }.status.error { color:#b42318; background:#fff1f0; }
+    @media (max-width:800px) { .grid { grid-template-columns:1fr; }.hero { padding:26px; } }
+  </style>
 </head>
 <body>
-    <h1>Analyse des Films</h1>
-
-    <!-- Graphiques -->
-    <h2>Diagramme à barre popularité</h2>
-    <canvas id="barChart" width="400" height="200"></canvas>
-    <h2>Diagramme en ligne</h2>
-    <canvas id="lineChart" width="400" height="200"></canvas>
-    <h2>Histogramme</h2>
-    <canvas id="histogram" width="400" height="200"></canvas>
-
+  <main class="page">
+    <section class="hero"><a class="back" href="index.html">← Retour à la liste</a><div class="eyebrow">Exploration des données</div><h1>Les films en graphiques</h1><p>Ces visualisations résument les films stockés dans MongoDB : popularité, notes et volume de votes.</p></section>
+    <div id="status" class="status">Chargement des données depuis l’API…</div>
+    <section class="grid">
+      <article class="card-panel"><h2>Films les plus populaires</h2><p>Les dix films ayant le score de popularité le plus élevé.</p><div class="chart-wrap"><canvas id="popularityChart"></canvas></div></article>
+      <article class="card-panel"><h2>Note et popularité</h2><p>Chaque point représente un film.</p><div class="chart-wrap"><canvas id="ratingChart"></canvas></div></article>
+      <article class="card-panel"><h2>Répartition des notes</h2><p>La hauteur indique combien de films appartiennent à chaque tranche.</p><div class="chart-wrap"><canvas id="distributionChart"></canvas></div></article>
+      <article class="card-panel"><h2>Nombre de votes</h2><p>Les films les plus évalués par la communauté.</p><div class="chart-wrap"><canvas id="votesChart"></canvas></div></article>
+    </section>
+  </main>
+  <script src="../assets/js/api-config.js"></script>
+  <script>
+    const apiUrl=(window.SDD1003_API_URL||'').replace(/\/$/,''); const status=document.querySelector('#status');
+    const n=v=>Number.isFinite(Number(v))?Number(v):0;
+    const baseOptions=yTitle=>({responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true}}},scales:{y:{beginAtZero:true,title:{display:true,text:yTitle}},x:{grid:{display:false}}}});
+    const chart=(id,config)=>new Chart(document.getElementById(id),config);
+    async function load(){try{const response=await fetch(`${apiUrl}/api/films?limit=100`);if(!response.ok)throw new Error(`API ${response.status}`);const payload=await response.json();const films=(payload.films||[]).filter(f=>f.title);if(!films.length)throw new Error('Aucun film disponible');status.textContent=`${films.length} films analysés sur ${payload.totalFilms||films.length} films disponibles.`;
+      const popularity=[...films].sort((a,b)=>n(b.popularity)-n(a.popularity)).slice(0,10).reverse();chart('popularityChart',{type:'bar',data:{labels:popularity.map(f=>f.title),datasets:[{label:'Popularité',data:popularity.map(f=>n(f.popularity)),backgroundColor:'#5e72e4',borderRadius:8}]},options:baseOptions('Score de popularité')});
+      chart('ratingChart',{type:'scatter',data:{datasets:[{label:'Films',data:films.map(f=>({x:n(f.vote_average),y:n(f.popularity)})),backgroundColor:'#11cdef',pointRadius:5}]},options:{...baseOptions('Popularité'),scales:{x:{title:{display:true,text:'Note moyenne / 10'},min:0,max:10},y:{beginAtZero:true,title:{display:true,text:'Popularité'}}}}});
+      const bins=Array.from({length:10},(_,i)=>({label:`${i}–${i+1}`,count:0}));films.forEach(f=>bins[Math.min(9,Math.max(0,Math.floor(n(f.vote_average))))].count++);chart('distributionChart',{type:'bar',data:{labels:bins.map(b=>b.label),datasets:[{label:'Nombre de films',data:bins.map(b=>b.count),backgroundColor:'#2dce89',borderRadius:8}]},options:baseOptions('Films')});
+      const votes=[...films].sort((a,b)=>n(b.vote_count)-n(a.vote_count)).slice(0,10).reverse();chart('votesChart',{type:'bar',data:{labels:votes.map(f=>f.title),datasets:[{label:'Nombre de votes',data:votes.map(f=>n(f.vote_count)),backgroundColor:'#fb6340',borderRadius:8}]},options:baseOptions('Votes')});
+    }catch(error){console.error(error);status.textContent='Impossible de charger les données graphiques.';status.classList.add('error');}}
+    load();
+  </script>
 </body>
 </html>
