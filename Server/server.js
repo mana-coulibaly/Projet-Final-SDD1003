@@ -27,13 +27,14 @@ app.get('/health', (_req, res) => {
 
 // Connexion à MongoDB
 const mongoURI = process.env.MONGODB_URI;
+const mongoDatabase = process.env.MONGODB_DB_NAME || 'Films';
 
 if (!mongoURI) {
     console.error('MONGODB_URI est obligatoire pour démarrer le serveur.');
     process.exit(1);
 }
 
-mongoose.connect(mongoURI)
+mongoose.connect(mongoURI, { dbName: mongoDatabase })
 .then(() => {
     console.log('Connecté à MongoDB Atlas avec succès');
     console.log('Base de données:', mongoose.connection.name);
