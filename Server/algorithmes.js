@@ -152,7 +152,6 @@ function regressionLinear(films) {
     console.log('Erreur Moyenne Absolue (MAE):', calculateMAE(predictedYTest, testData.map(film => film.popularity)));
     console.log('RMSE:', calculateRMSE(predictedYTest, testData.map(film => film.popularity)));
     console.log('R²:', calculateR2(predictedYTest, testData.map(film => film.popularity)));
-    console.log('Accuracy:', calculateAccuracy(predictedYTest, testData.map(film => film.popularity)));
 
 }
 
@@ -177,20 +176,15 @@ function evaluateModel(predictedYTest, testData) {
     // 3. Calcul du R² (Coefficient de détermination)
     const r2 = calculateR2(predictedYTest, testY);
 
-    // 4. Calcul de l'Accuracy Score
-    const accuracy = calculateAccuracy(predictedYTest, testY);
-
     // Affichage des résultats dans la console
     console.log("MAE : ", mae);
     console.log("RMSE : ", rmse);
     console.log("R² : ", r2);
-    console.log("Accuracy : ", accuracy);
 
     // Mettre à jour les éléments HTML
     document.getElementById('maeValue').textContent = mae.toFixed(2);
     document.getElementById('rmseValue').textContent = rmse.toFixed(2);
     document.getElementById('r2Value').textContent = r2.toFixed(2);
-    document.getElementById('accuracyValue').textContent = `${accuracy.toFixed(2)} %`;
 }
 
 
@@ -211,6 +205,13 @@ function calculateR2(predicted, actual) {
     const meanActual = actual.reduce((sum, val) => sum + val, 0) / actual.length;
     const ssTotal = actual.reduce((sum, val) => sum + Math.pow(val - meanActual, 2), 0);
     const ssResidual = predicted.reduce((sum, val, i) => sum + Math.pow(val - actual[i], 2), 0);
+
+    console.log('Predicted:', predicted);
+    console.log('Actual:', actual);
+    console.log('Mean Actual:', meanActual);
+    console.log('SS Total:', ssTotal);
+    console.log('SS Residual:', ssResidual);
+
     return 1 - (ssResidual / ssTotal);
 }
 
@@ -242,9 +243,10 @@ function knnPredict(trainData, testData, k) {
 }
 
 // 2. Fonction principale pour KNN
-function runKNN(films, k = 19) {
+function runKNN(films, k = 5) {
     const cleanData = cleanFilms(films); // Nettoyer les données
-    const { trainData, testData } = splitData(cleanData); // Diviser les données en train/test
+    const normalizedData = normalizeData(cleanData, ['vote_average', 'popularity']); // Normaliser les données
+    const { trainData, testData } = splitData(normalizedData); // Diviser les données en train/test
 
     // Effectuer les prédictions avec KNN
     const predictions = knnPredict(trainData, testData, k);
@@ -261,7 +263,6 @@ function runKNN(films, k = 19) {
     console.log('MAE :', mae);
     console.log('RMSE :', rmse);
     console.log('R² :', r2);
-    console.log('Accuracy :', calculateAccuracy(predictedValues, actualValues));
 
     // Afficher les résultats
     displayKnnResults(predictions);
@@ -307,7 +308,7 @@ function displayKnnResults(predictions) {
             plugins: {
                 title: {
                     display: true,
-                    text: `Prédictions KNN avec k=${predictions.length}`
+                    text: `Prédictions KNN `
                 }
             },
             scales: {
@@ -326,12 +327,11 @@ function displayKnnResults(predictions) {
     document.getElementById('knnMaeValue').textContent = mae.toFixed(2);
     document.getElementById('knnRmseValue').textContent = rmse.toFixed(2);
     document.getElementById('knnR2Value').textContent = r2.toFixed(2);
-    document.getElementById('knnAccuracyValue').textContent = `${calculateAccuracy(predictedPopularity, actualPopularity).toFixed(2)} %`;
 }
 
 // Algorithmes DBSCAN
 // 1. Implémentation de l'algorithme DBSCAN
-function runDBSCAN(films, epsilon = 0.5, minPoints = 5) {
+function runDBSCAN(films, epsilon = 1, minPoints = 5) {
     const cleanData = cleanFilms(films);
     const normalizedData = normalizeData(cleanData, ['popularity', 'vote_average']);
 

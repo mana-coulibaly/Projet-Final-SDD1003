@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const Film = require('../models/Film');
-const { DBSCAN } = require('@turf/clusters-dbscan');
 
 // Récupérer tous les films
 router.get('/', async (req, res) => {
     try {
-        const { page = 1, limit = 200 } = req.query; // Par défaut : page 1, 10 films par page
+        const { page = 1, limit = 100 } = req.query; // Par défaut : page 1, 10 films par page
         const films = await Film.find()
             .skip((page - 1) * limit)
             .limit(parseInt(limit))

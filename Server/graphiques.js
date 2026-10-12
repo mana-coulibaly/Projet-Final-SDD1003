@@ -1,5 +1,7 @@
+const limit = 100; // Limite de films à récupérer
+
 // Récupérer les données depuis le backend
-fetch('http://localhost:3000/api/films')
+fetch(`http://localhost:3000/api/films?limit=${limit}`)
 .then(response => response.json())
 .then(films => {
     const filmsList = films.films; // Adapter selon la structure de votre réponse

@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json());
 
 // Connexion à MongoDB
-const mongoURI = 'mongodb+srv://manastar:SDD1003@cluster1.slqex.mongodb.net/Films?retryWrites=true&w=majority';
+const mongoURI = 'mongodb+srv://manastar:SDD1003@cluster1.slqex.mongodb.net/Films?retryWrites=true&w=majority&appName=Cluster1';
 
 mongoose.connect(mongoURI)
 .then(() => {

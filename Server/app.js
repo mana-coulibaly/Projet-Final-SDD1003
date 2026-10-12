@@ -27,17 +27,10 @@ async function fetchFilms(page = 1) {
         }
 
         currentPage = page; // Mettre à jour la page actuelle
-
-        // Mise à jour de la pagination
-        //currentPage++;
-        //document.getElementById("load-more").style.display =
-            //data.currentPage < data.totalPages ? "block" : "none";
     } catch (error) {
         console.error("Erreur dans fetchFilms:", error);
     }
 }
-
-
 
 
 // Fonction pour afficher les films dans le tableau
